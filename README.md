@@ -2,6 +2,12 @@
 
 Personal collection of reusable Codex skills.
 
+## Included skills
+
+- **ca** — static whole-program call-stack analysis from the main entry point.
+- **ce** — key-node code entry guide for learning a repository before tracing
+  its full call stack.
+
 ## Structure
 
 ```text

@@ -1,0 +1,4 @@
+interface:
+  display_name: "CD"
+  short_description: "Add an attach-friendly startup wait to Python entry points"
+  default_prompt: "Use $cd to inspect this Python project's CLI and service entry points, then add a guarded --debugwait startup option at the earliest practical point."

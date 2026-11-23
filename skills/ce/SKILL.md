@@ -7,7 +7,7 @@ description: Code entry - key-node static analysis for learning a codebase (not 
 
 ## Purpose
 
-Statically scan a codebase and output a small set of **key nodes**（关键结点）– the doors into understanding the repo（入口 / 配置 / 编排等）– each with:
+Statically scan a codebase and write a small set of **key nodes**（关键结点）– the doors into understanding the repo（入口 / 配置 / 编排等）– each with:
 
 - **one-sentence explanation**（一句话说明）
 - **a link** to the exact source location（最好带上链接）
@@ -38,22 +38,30 @@ This skill does **not** try to build a full program call stack (use **ca** for t
    - Prefer "one file/function that unlocks a whole area" over many small nodes.
    - If multiple implementations exist, pick the one wired in the default runtime path; mention alternates briefly.
 
-4. Write output file to workspace root:
-   - Filename:
+4. Write the report using the shared study-output convention:
+   - Default directory: `study/` under the workspace root.
+   - Create `study/` when it does not exist.
+   - Default filename:
 
 ```text
-STUDY.md
+ce_yyyyMMdd_HHmmss.txt
 ```
+
+   - Generate the timestamp from the current local time.
+   - Do not overwrite an existing report and do not create `STUDY.md` unless
+     the user explicitly requests that filename.
+   - If the user explicitly provides another directory or filename, honor it.
 
 ## Output Format
 
 Use this structure:
 
 ```text
-# How to use
-示例（你只要这样问即可）：
-- "ce: 帮我扫一下这个仓库的关键结点，输出到 STUDY.md"
-- "ce: 只要主线链路 5 个关键结点，带链接"
+CE 关键结点分析：<project name>
+生成时间：<yyyy-MM-dd HH:mm:ss timezone>
+工作区：<workspace root>
+基线提交：<git commit subject, or "not a git repository">
+分析范围：<default runtime path and any exclusions>
 
 == 关键结点清单（key nodes） ==
 

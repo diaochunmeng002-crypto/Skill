@@ -37,6 +37,6 @@ Only create optional resource directories when the skill actually uses them.
 Validate a skill directory before committing:
 
 ```powershell
-python C:\Users\diaochunmeng\.codex\skills\.system\skill-creator\scripts\quick_validate.py `
-  C:\Code\AI\Skills\skills\<skill-name>
+python "$env:CODEX_HOME\skills\.system\skill-creator\scripts\quick_validate.py" `
+  "<repo-root>\skills\<skill-name>"
 ```

@@ -1,0 +1,14 @@
+{
+  "id": "example",
+  "sourceRoot": "${PWD}",
+  "discoverRoots": [],
+  "manifestDir": "debug\\breakpoints",
+  "manifestNameFormat": "callstack-{0}.manifest",
+  "manifestFilter": "*.manifest",
+  "relativePathAnchor": "",
+  "dteProgId": "VisualStudio.DTE.17.0",
+  "allManifestsSet": "Default",
+  "sectionDefaultById": {
+    "default": "Default"
+  }
+}

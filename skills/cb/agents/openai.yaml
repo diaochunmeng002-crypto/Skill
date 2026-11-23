@@ -1,0 +1,4 @@
+interface:
+  display_name: "CB Code Breakpoint"
+  short_description: "Apply Visual Studio breakpoint manifests"
+  default_prompt: "Use $cb to resolve this project's breakpoint preset or manifest and synchronize the requested breakpoints with Visual Studio."

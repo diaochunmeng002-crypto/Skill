@@ -40,8 +40,18 @@ ca_20260605_193000.txt
    - Do not keep noisy repeated lines like `cli.main : 84`, `cli.main : 85`, `cli.main : 94` if the useful information is the child action.
    - Keep meaningful child actions like `load_dotenv`, `build_parser`, `from_env`, `bind_tools`, `add_node`, `add_conditional_edges`, `invoke`, `llm_call`, and router functions.
    - Use indentation to represent call depth.
-   - Do not create a right-hand aligned description column; mixed Chinese/English text and editor font settings make it visually unstable.
-   - Put explanations on the next line with one extra indent and a `#` prefix.
+   - Prefer putting each explanation on the same line as its call:
+     `[call]  # explanation`.
+   - Align `#` within a contiguous sibling group at a common display column.
+     Use at least two spaces before `#`; prefer the next multiple-of-four tab
+     stop after the normal call width.
+   - Count CJK characters as two display columns. Do not let one exceptionally
+     wide call shift the alignment column for the whole group.
+   - Target a maximum report width of about 100 display columns. When a call is
+     too wide, or the aligned explanation would exceed that width, put the
+     explanation on the next line with two extra spaces and a `#` prefix.
+   - Keep one explanation per call. If it does not fit comfortably beside the
+     call, shorten it instead of creating a long right-hand column.
    - Omit obvious telemetry/logging-only lines by default:
      - Examples: `active_logger.log(...)`, `logger.log(...)`, metric counters, tracing spans.
      - Replace with a single collapsed note only when it helps: `logging (omitted)`.
@@ -50,6 +60,11 @@ ca_20260605_193000.txt
 4. Add state/data-flow notes where useful:
    - Show where key state fields are created, formatted, passed, mutated, or consumed.
    - For agent/LLM systems, explicitly identify prompt construction, model invocation, tool execution, retry, guardrail, routing, and termination points.
+   - Apply the same inline-comment rule to state variables, flow arrows, config
+     keys, and other report items. Do not revert to block-style comments just
+     because the item name is short.
+   - In a `[关键状态流]` or similar section, align `#` within that group even
+     when the preceding items use `->` instead of a stack-style node.
 
 5. Write the final output file:
    - Use the workspace root.
@@ -61,14 +76,20 @@ ca_20260605_193000.txt
 Use this structure:
 
 ```text
-[entry point]
-  # 程序入口 / main entry
-[parent function]
-  # 阶段说明
-  [important child call]
-    # 说明这个调用做什么
-  [important child call]
-    # 说明这个调用做什么
+[entry point]                    # 程序入口 / main entry
+[parent function]                # 阶段说明
+  [important child call]         # 说明这个调用做什么
+  [another child call]           # 说明这个调用做什么
+  [a child call that is too wide to annotate inline]
+    # 宽行回退：说明放在下一行，避免右侧注释被推到很远。
+
+[关键状态流]
+  abs_fnames                    # 可编辑文件；进入 chat_files 和 repo map。
+  abs_read_only_fnames          # 只读文件；进入 readonly_files。
+  cur_messages                  # 当前轮消息；发送前后分别追加 user/assistant。
+  done_messages                 # 历史消息；经 ChatSummary 压缩。
+  ChatChunks                    # 顺序：system、examples、files、done、reminder。
+  partial_response_content      # 当前模型回复；流式与非流式最终都写入这里。
 
 总备注：这份静态调用链能证明什么，不能证明什么
 能证明：
@@ -101,11 +122,17 @@ If the user asks for "完全展开":
 ## Style Rules
 
 - Prefer Chinese explanations if the user is using Chinese.
-- Keep call lines compact.
-- Prefer block-style explanations over alignment columns:
-  - Good: call line first, then a next-line `# explanation` with one extra indent.
-  - Avoid: padding spaces to align a right-hand description column.
-- Keep descriptions short; if the description is longer than one line, split it into multiple `#` lines.
+- Keep report items and call lines compact.
+- Prefer inline `#` explanations over block-style comments.
+- Apply inline alignment to every block type: calls, state variables, flow
+  arrows, configuration entries, and summary items.
+- Align comments in nearby sibling lines within the same section and indentation
+  level, but do not chase alignment across unrelated sections or branches.
+- Cap alignment columns around 48 display columns. Long calls use the next-line
+  fallback instead of pushing all comments to the right.
+- Keep descriptions short. If an inline description would make the line awkward,
+  put it on the following line rather than shrinking the gap or wrapping the
+  call line.
 - Avoid a raw debugger-style dump unless the user explicitly asks for it.
 - If runtime behavior is inferred from framework conventions, label it as inferred.
 - If exact runtime line numbers from third-party libraries are needed, ask the user for a runtime call stack, trace, or debugger capture.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "CH Code How to Run"
+  short_description: "Create a concise how-to-run guide for any project"
+  default_prompt: "Use $ch to scan this project and write a concise how-to-run guide in study/."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "CM Code Manual"
+  short_description: "List personal skills one line each"
+  default_prompt: "Use $cm to list the personal Codex skills and explain each one in a single short sentence."

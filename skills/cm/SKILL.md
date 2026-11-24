@@ -23,8 +23,8 @@ their local installation status.
 
    ```text
    静态分析
-     [已装] ca  Code Analyze — 从入口整理完整调用链
-     [未装] ce  Code Entry — 找出阅读代码时应先看的关键结点
+     [已装] CA(Code Analyze) — 从入口整理完整调用链
+     [未装] CE(Code Entry) — 找出阅读代码时应先看的关键结点
    ```
 
 4. Use these status markers:

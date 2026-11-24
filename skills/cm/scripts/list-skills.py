@@ -71,11 +71,11 @@ def first_sentence(text: str, limit: int = 72) -> str:
     return sentence
 
 
-def known_summary(name: str) -> str | None:
+def format_skill(name: str, description: str) -> str:
     metadata = SKILL_META.get(name)
-    if not metadata:
-        return None
-    return f"{metadata[1]} — {metadata[2]}"
+    if metadata:
+        return f"{name.upper()}({metadata[1]}) — {metadata[2]}"
+    return f"{name.upper()} — {description}"
 
 
 def collect_local_skills(root: Path) -> dict[str, str]:
@@ -92,8 +92,11 @@ def collect_local_skills(root: Path) -> dict[str, str]:
 
         frontmatter = read_frontmatter(skill_file)
         name = frontmatter.get("name") or directory.name
-        entries[name] = known_summary(name) or first_sentence(
-            frontmatter.get("description", "")
+        metadata = SKILL_META.get(name)
+        entries[name] = (
+            metadata[2]
+            if metadata
+            else first_sentence(frontmatter.get("description", ""))
         )
     return entries
 
@@ -131,9 +134,9 @@ def fetch_github_catalog(
 
     catalog: dict[str, str] = {}
     for name, path in sorted(paths):
-        summary = known_summary(name)
-        if summary:
-            catalog[name] = summary
+        metadata = SKILL_META.get(name)
+        if metadata:
+            catalog[name] = metadata[2]
             continue
 
         raw_url = (
@@ -210,7 +213,6 @@ def main() -> int:
     grouped: dict[str, list[tuple[str, str, str]]] = {
         group: [] for group in GROUP_ORDER
     }
-    name_width = max(len(name) for name in names)
     for name in names:
         if remote_available:
             if name in local and name in catalog:
@@ -221,8 +223,8 @@ def main() -> int:
                 status = "[本地]"
         else:
             status = "[已装]"
-        summary = catalog.get(name) or local.get(name) or "个人 skill"
-        grouped[skill_group(name)].append((name, summary, status))
+        description = catalog.get(name) or local.get(name) or "个人 skill"
+        grouped[skill_group(name)].append((name, description, status))
 
     first_group = True
     for group in GROUP_ORDER:
@@ -233,8 +235,8 @@ def main() -> int:
             print()
         first_group = False
         print(group)
-        for name, summary, status in entries:
-            print(f"  {status} {name:<{name_width}}  {summary}")
+        for name, description, status in entries:
+            print(f"  {status} {format_skill(name, description)}")
 
     if remote_error:
         print(

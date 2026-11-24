@@ -21,12 +21,12 @@ for stream in (sys.stdout, sys.stderr):
 DEFAULT_REPO = "diaochunmeng002-crypto/Skill"
 DEFAULT_REF = "main"
 SKILL_META = {
-    "ca": ("静态分析", "从入口整理完整调用链"),
-    "ce": ("静态分析", "找出阅读代码时应先看的关键结点"),
-    "cb": ("调试", "根据断点清单操作 Visual Studio 断点"),
-    "cd": ("调试", "分析启动入口并支持 --debugwait"),
-    "ch": ("运行", "生成项目的最短运行说明"),
-    "cm": ("管理", "列出 Git 仓库与本机 skill 状态"),
+    "ca": ("静态分析", "Code Analyze", "从入口整理完整调用链"),
+    "ce": ("静态分析", "Code Entry", "找出阅读代码时应先看的关键结点"),
+    "cb": ("调试", "Code Breakpoint", "根据断点清单操作 Visual Studio 断点"),
+    "cd": ("调试", "Code Debug", "分析启动入口并支持 --debugwait"),
+    "ch": ("运行", "Code How to Run", "生成项目的最短运行说明"),
+    "cm": ("管理", "Code Manual", "列出 Git 仓库与本机 skill 状态"),
 }
 GROUP_ORDER = ("静态分析", "调试", "运行", "管理", "其他")
 SKILL_ORDER = {name: index for index, name in enumerate(SKILL_META)}
@@ -71,6 +71,13 @@ def first_sentence(text: str, limit: int = 72) -> str:
     return sentence
 
 
+def known_summary(name: str) -> str | None:
+    metadata = SKILL_META.get(name)
+    if not metadata:
+        return None
+    return f"{metadata[1]} — {metadata[2]}"
+
+
 def collect_local_skills(root: Path) -> dict[str, str]:
     entries: dict[str, str] = {}
     if not root.is_dir():
@@ -85,9 +92,8 @@ def collect_local_skills(root: Path) -> dict[str, str]:
 
         frontmatter = read_frontmatter(skill_file)
         name = frontmatter.get("name") or directory.name
-        metadata = SKILL_META.get(name)
-        entries[name] = (
-            metadata[1] if metadata else first_sentence(frontmatter.get("description", ""))
+        entries[name] = known_summary(name) or first_sentence(
+            frontmatter.get("description", "")
         )
     return entries
 
@@ -125,9 +131,9 @@ def fetch_github_catalog(
 
     catalog: dict[str, str] = {}
     for name, path in sorted(paths):
-        metadata = SKILL_META.get(name)
-        if metadata:
-            catalog[name] = metadata[1]
+        summary = known_summary(name)
+        if summary:
+            catalog[name] = summary
             continue
 
         raw_url = (

@@ -292,7 +292,7 @@ foreach ($item in $deduped) {
     }
 
     try {
-        [void]$dte.Debugger.Breakpoints.Add($item.FullPath, [int]$item.Line, 1)
+        [void]$dte.Debugger.Breakpoints.Add("", $item.FullPath, [int]$item.Line, 1)
         $existingKeys[$key] = $true
         $added++
     }

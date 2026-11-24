@@ -1,0 +1,4 @@
+interface:
+  display_name: "CBP Code Breakpoint Planner"
+  short_description: "Generate breakpoint manifests from analysis reports"
+  default_prompt: "Use $cbp with a debugging goal and at least one ca or ce analysis source to generate a breakpoint manifest."

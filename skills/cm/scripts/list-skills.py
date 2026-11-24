@@ -24,6 +24,7 @@ SKILL_META = {
     "ca": ("静态分析", "Code Analyze", "从入口整理完整调用链"),
     "ce": ("静态分析", "Code Entry", "找出阅读代码时应先看的关键结点"),
     "cb": ("调试", "Code Breakpoint", "根据断点清单操作 Visual Studio 断点"),
+    "cbp": ("调试", "Code Breakpoint Planner", "根据目标和分析来源生成断点 manifest"),
     "cd": ("调试", "Code Debug", "分析启动入口并支持 --debugwait"),
     "ch": ("运行", "Code How to Run", "生成项目的最短运行说明"),
     "cm": ("管理", "Code Manual", "列出 Git 仓库与本机 skill 状态"),
